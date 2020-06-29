@@ -2,11 +2,11 @@
 
 The backend for Randy - test randomizer application
 
-## Hosing
+## Hosting
 
 - url: application currently not hosted
 
-## Developing locally
+## Developing Locally
 
 - Run `yarn install` to install dependencies
 - Use `yarn run dev` to run the application locally
