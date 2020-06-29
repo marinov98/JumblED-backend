@@ -1,7 +1,7 @@
 import express from "express";
 import bodyparser from "body-parser";
 import logger from "morgan";
-import { port, db_url } from "./utils/config/keys";
+import { port, dbUrl } from "./utils/config/keys";
 
 (async () => {
   // Initialize express

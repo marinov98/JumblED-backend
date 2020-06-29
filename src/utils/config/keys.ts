@@ -6,7 +6,9 @@ if (process.env.NODE_ENV !== "production") {
   if (error) throw error;
 }
 
-const port = process.env.PORT || 3002;
-const db_url = process.env.DB_URL || "blah";
+const port: number = parseInt(process.env.PORT!) || 3002;
+const dbUrl: string = process.env.DB_URL || "blah";
+const jwtSecret: string = process.env.SECRET || "VERYSUPERSECRETLYSECRET";
+const googleSecret: string = process.env.GOOGLE_SECRET || "googleSecret";
 
-export { port, db_url };
+export { port, dbUrl, jwtSecret, googleSecret };
