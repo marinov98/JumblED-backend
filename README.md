@@ -10,3 +10,4 @@ The backend for Randy - test randomizer application
 
 - Run `yarn install` to install dependencies
 - Use `yarn run dev` to run the application locally
+- Use `cat .env.sample > .env` and fill in the information
