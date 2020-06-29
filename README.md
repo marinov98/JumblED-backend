@@ -1,2 +1,12 @@
-# Budgie-backend
-a back end for a potenrial budget app but really I am just learning typescript and firebase
+# Randy-backend
+
+The backend for Randy - test randomizer application
+
+## Hosing
+
+- url: application currently not hosted
+
+## Getting Started
+
+- Run `yarn install` to install dependencies
+- Use `yarn run dev` to run the application locally
