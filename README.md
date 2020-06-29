@@ -6,8 +6,8 @@ The backend for Randy - test randomizer application
 
 - url: application currently not hosted
 
-## Getting Started
+## Developing locally
 
 - Run `yarn install` to install dependencies
 - Use `yarn run dev` to run the application locally
-- Use `cat .env.sample > .env` and fill in the information
+- Use `cat .env.sample > .env` to create an environment file with the appropriate fields which you will then fill in
