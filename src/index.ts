@@ -1,7 +1,9 @@
 import express from "express";
 import bodyparser from "body-parser";
 import logger from "morgan";
-import { port, dbUrl } from "./utils/config/keys";
+import passport from "passport";
+import { port } from "./utils/config/keys";
+import connectToDatabase from "./utils/config/database";
 
 (async () => {
   // Initialize express
@@ -9,11 +11,15 @@ import { port, dbUrl } from "./utils/config/keys";
   app.set("port", port);
 
   // middleware
-  app.use(logger("dev"));
+  if (process.env.NODE_ENV != "production") {
+    app.use(logger("dev"));
+  }
   app.use(bodyparser.urlencoded({ extended: false }));
   app.use(bodyparser.json());
+  app.use(passport.initialize());
 
   // Database
+  await connectToDatabase();
 
   // Routes
 
