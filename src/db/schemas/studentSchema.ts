@@ -1,7 +1,15 @@
-import { Schema } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 import bcrypt from "bcryptjs";
 
-export const StudentSchema: Schema = new Schema({
+export interface IStudent extends Document {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  classes?: Array<typeof Schema.Types.ObjectId>;
+}
+
+const StudentSchema: Schema = new Schema({
   firstName: {
     type: String,
     required: true
@@ -18,24 +26,22 @@ export const StudentSchema: Schema = new Schema({
     type: String,
     required: true
   },
-  classes: [{ type: Schema.Types.ObjectId, ref: "Class" }],
-  teachers: [{ type: Schema.Types.ObjectId, ref: "Teacher" }]
+  classes: [{ type: Schema.Types.ObjectId, ref: "Class" }]
 });
 
 // Handling passwords
-StudentSchema.pre("save", async function (this: Schema, next: any) {
-  if (!this.isModified("password")) return next();
-
+StudentSchema.pre("save", async function (this: IStudent, next: any) {
   try {
     const hash: string = await bcrypt.hash(this.password, 12);
     this.password = hash;
+    next();
   } catch (err) {
     console.error(err);
   }
 });
 
 StudentSchema.methods.comparePassword = async function (
-  this: Schema,
+  this: IStudent,
   otherPassword: string
 ) {
   try {
@@ -44,3 +50,5 @@ StudentSchema.methods.comparePassword = async function (
     console.error(err);
   }
 };
+
+export default model<IStudent>("Student", StudentSchema);
