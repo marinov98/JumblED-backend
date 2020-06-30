@@ -1,6 +1,6 @@
-# Randy-backend
+# JumblED-backend
 
-The backend for Randy - test randomizer application
+The backend for JumblED - test randomizer application
 
 ## Hosting
 

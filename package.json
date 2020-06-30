@@ -1,5 +1,5 @@
 {
-  "name": "randy-backend",
+  "name": "jumbled-backend",
   "version": "1.0.0",
   "description": "a backend for a potential app to help social distancing education",
   "main": "index.ts",
@@ -14,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/marinov98/Randy-backend.git"
+    "url": "git+https://github.com/marinov98/JumblED-backend.git"
   },
   "keywords": [],
   "author": "Marin Pavlinov Marinov",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/marinov98/Randy-backend/issues"
+    "url": "https://github.com/marinov98/JumblED-backend/issues"
   },
-  "homepage": "https://github.com/marinov98/Randy-backend#readme",
+  "homepage": "https://github.com/marinov98/JumblED-backend#readme",
   "devDependencies": {
     "@types/express": "^4.17.6",
     "@types/morgan": "^1.9.1",
