@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
-export const StudentSchema: Schema = new Schema({
+export const TeacherSchema: Schema = new Schema({
   firstName: {
     type: String,
     required: true
@@ -18,12 +18,12 @@ export const StudentSchema: Schema = new Schema({
     type: String,
     required: true
   },
-  classes: [{ type: Schema.Types.ObjectId, ref: "Class" }],
-  teachers: [{ type: Schema.Types.ObjectId, ref: "Teacher" }]
+  // classes the teacher teaches
+  classes: [{ type: Schema.Types.ObjectId, ref: "Class" }]
 });
 
 // Handling passwords
-StudentSchema.pre("save", async function (this: Schema, next: any) {
+TeacherSchema.pre("save", async function (this: Schema, next: any) {
   if (!this.isModified("password")) return next();
 
   try {
@@ -34,7 +34,7 @@ StudentSchema.pre("save", async function (this: Schema, next: any) {
   }
 });
 
-StudentSchema.methods.comparePassword = async function (
+TeacherSchema.methods.comparePassword = async function (
   this: Schema,
   otherPassword: string
 ) {
