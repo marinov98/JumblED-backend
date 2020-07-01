@@ -1,4 +1,4 @@
-import * as mongoose from "mongoose";
+import mongoose from "mongoose";
 import { dbUrl } from "./../config/keys";
 
 export default async function connectToDatabase() {

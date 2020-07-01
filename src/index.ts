@@ -7,31 +7,35 @@ import connectToDatabase from "./utils/config/database";
 
 (async () => {
   // Initialize express
-  const app = express();
-  app.set("port", port);
+  try {
+    const app = express();
+    app.set("port", port);
 
-  // middleware
-  if (process.env.NODE_ENV != "production") {
-    app.use(logger("dev"));
+    // middleware
+    if (process.env.NODE_ENV !== "production") {
+      app.use(logger("dev"));
+    }
+    app.use(bodyparser.urlencoded({ extended: false }));
+    app.use(bodyparser.json());
+    app.use(passport.initialize());
+
+    // Database
+    await connectToDatabase();
+
+    // Routes
+
+    // single home route
+    app.get("/", (req: express.Request, res: express.Response) => {
+      return res.send("Budgie server up and running");
+    });
+
+    // other routes go here
+
+    // launch server
+    app.listen(port, () => {
+      console.log(`📡 Server up! 📡 Listening on  http://localhost:${port}`);
+    });
+  } catch (err) {
+    console.error(err);
   }
-  app.use(bodyparser.urlencoded({ extended: false }));
-  app.use(bodyparser.json());
-  app.use(passport.initialize());
-
-  // Database
-  await connectToDatabase();
-
-  // Routes
-
-  // single home route
-  app.get("/", (req: express.Request, res: express.Response) => {
-    return res.send("Budgie server up and running");
-  });
-
-  // other routes go here
-
-  // launch server
-  app.listen(port, () => {
-    console.log(`📡 Server up! 📡 Listening on  http://localhost:${port}`);
-  });
 })();

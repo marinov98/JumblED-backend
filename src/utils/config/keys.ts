@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== "production") {
 
 const port: number = parseInt(process.env.PORT!) || 3002;
 const dbUrl: string =
-  process.env.DB_URL || "mongodb://localhost:27017/jumbled-test";
+  process.env.DB_URL || "mongodb://localhost:27017/jumbledTest";
 const jwtSecret: string = process.env.SECRET || "VERYSUPERSECRETLYSECRET";
 const googleSecret: string = process.env.GOOGLE_SECRET || "googleSecret";
 
