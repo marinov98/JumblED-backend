@@ -35,7 +35,10 @@ const TeacherSchema: Schema = new Schema({
 });
 
 // Handling passwords
-TeacherSchema.pre("save", async function (this: ITeacher, next: any) {
+TeacherSchema.pre("save", async function (
+  this: ITeacher,
+  next: any
+): Promise<void> {
   try {
     const hash: string = await bcrypt.hash(this.password, 12);
     this.password = hash;
@@ -48,11 +51,12 @@ TeacherSchema.pre("save", async function (this: ITeacher, next: any) {
 TeacherSchema.methods.comparePassword = async function (
   this: ITeacher,
   otherPassword: string
-) {
+): Promise<boolean> {
   try {
     return await bcrypt.compare(otherPassword, this.password);
   } catch (err) {
     console.error(err);
+    return false;
   }
 };
 

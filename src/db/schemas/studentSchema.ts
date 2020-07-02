@@ -30,7 +30,10 @@ const StudentSchema: Schema = new Schema({
 });
 
 // Handling passwords
-StudentSchema.pre("save", async function (this: IStudent, next: any) {
+StudentSchema.pre("save", async function (
+  this: IStudent,
+  next: any
+): Promise<void> {
   try {
     const hash: string = await bcrypt.hash(this.password, 12);
     this.password = hash;
@@ -43,11 +46,12 @@ StudentSchema.pre("save", async function (this: IStudent, next: any) {
 StudentSchema.methods.comparePassword = async function (
   this: IStudent,
   otherPassword: string
-) {
+): Promise<boolean> {
   try {
     return await bcrypt.compare(otherPassword, this.password);
   } catch (err) {
     console.error(err);
+    return false;
   }
 };
 
