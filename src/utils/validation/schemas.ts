@@ -6,7 +6,7 @@ const registrationSchema = Joi.object({
   email: Joi.string()
     .email({
       minDomainSegments: 2,
-      tlds: { allow: ["com", "org"] }
+      tlds: { allow: ["com", "org", "edu"] }
     })
     .required(),
   password: Joi.string().min(5).required(),

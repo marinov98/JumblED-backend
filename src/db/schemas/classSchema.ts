@@ -13,7 +13,7 @@ const ClassSchema: Schema = new Schema({
     required: true
   },
   students: [{ type: Schema.Types.ObjectId, ref: "Student" }],
-  questions: [{ type: Schema.Types.ObjectId, ref: "Question" }],
+  questions: [{ type: Schema.Types.ObjectId, ref: "Question" }], // tests
   teacher: {
     type: Schema.Types.ObjectId,
     required: true,
