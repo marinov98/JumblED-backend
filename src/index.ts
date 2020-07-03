@@ -46,9 +46,9 @@ import {
     await connectToDatabase();
 
     // Routes
-    app.use("api/auth", auth);
-    app.use("api/teachers", teachers);
-    app.use("api/students", students);
+    app.use("/api/auth", auth);
+    app.use("/api/teachers", teachers);
+    app.use("/api/students", students);
     app.use("api/classes", classes);
     app.use("api/tests", tests);
     app.use("api/questions", questions);
