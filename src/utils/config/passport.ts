@@ -17,13 +17,12 @@ passport.use(
 
         if (teacher) {
           done(null, teacher);
-          return;
+        } else {
+          const student = await Student.findOne({ email: payload.email });
+
+          if (!student) done(null, false);
+          else done(null, student);
         }
-
-        const student = await Student.findOne({ email: payload.email });
-
-        if (!student) done(null, false);
-        else done(null, student);
       } catch (err) {
         done(err);
       }
