@@ -1,11 +1,8 @@
-import { Schema, Document, model } from "mongoose";
+import { Schema, model } from "mongoose";
+import IUser from "./../interfaces/user";
 import bcrypt from "bcryptjs";
 
-export interface IStudent extends Document {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
+export interface IStudent extends IUser {
   classes?: Array<typeof Schema.Types.ObjectId>;
 }
 
@@ -30,8 +27,7 @@ const StudentSchema: Schema = new Schema({
 });
 
 // Handling passwords
-StudentSchema.pre("save", async function (
-  this: IStudent,
+StudentSchema.pre<IStudent>("save", async function (
   next: Function
 ): Promise<void> {
   try {
