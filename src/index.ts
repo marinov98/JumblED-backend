@@ -5,14 +5,7 @@ import passport from "passport";
 import { port } from "./utils/config/keys";
 import "./utils/config/passport";
 import connectToDatabase from "./utils/config/database";
-import {
-  auth,
-  teachers,
-  students,
-  classes,
-  tests,
-  questions
-} from "./routes/index";
+import { auth, teachers, students } from "./routes/index";
 
 (async () => {
   // Initialize express
