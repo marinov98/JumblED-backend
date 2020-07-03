@@ -116,11 +116,11 @@ router.post(
 
 /**
  *  Add student to a class
- *  @route PUT api/teachers/classes/student/:classId
- *  @desc grab the quetions from a test
+ *  @route PATCH api/teachers/classes/student/:classId
+ *  @desc grab the questions from a test
  *  @access Public
  */
-router.put(
+router.patch(
   "/classes/:studentEmail/:classId",
   async (
     req: express.Request,
@@ -144,6 +144,37 @@ router.put(
       await classToUpdate.save();
 
       return res.status(200).json(classToUpdate);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
+ *  Add a question to a test
+ *  @route PATCH api/teachers/tests/questions
+ *  @desc
+ *  @access Public
+ */
+router.patch(
+  "/tests/questions/:testId",
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const testToUpdate = await Test.findById(req.params.testId);
+
+      if (!testToUpdate)
+        return res.status(404).json({ error: "Test not found" });
+
+      const questionToBeAdded = await Question.create(req.body);
+
+      testToUpdate.questions.push(questionToBeAdded._id);
+      await testToUpdate.save();
+
+      return res.status(200).json(testToUpdate);
     } catch (err) {
       next(err);
     }
