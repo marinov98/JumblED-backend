@@ -49,9 +49,6 @@ import {
     app.use("/api/auth", auth);
     app.use("/api/teachers", teachers);
     app.use("/api/students", students);
-    app.use("api/classes", classes);
-    app.use("api/tests", tests);
-    app.use("api/questions", questions);
 
     // single home route
     app.get("/", (req: express.Request, res: express.Response) => {
