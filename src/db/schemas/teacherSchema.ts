@@ -6,7 +6,6 @@ export interface ITeacher extends Document {
   lastName: string;
   email: string;
   password: string;
-  department: string;
   classes?: Array<typeof Schema.Types.ObjectId>;
   tests?: Array<typeof Schema.Types.ObjectId>;
 }
