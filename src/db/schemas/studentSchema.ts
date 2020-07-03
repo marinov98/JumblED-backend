@@ -32,11 +32,12 @@ const StudentSchema: Schema = new Schema({
 // Handling passwords
 StudentSchema.pre("save", async function (
   this: IStudent,
-  next: any
+  next: Function
 ): Promise<void> {
   try {
-    const hash: string = await bcrypt.hash(this.password, 12);
-    this.password = hash;
+    if (this.isModified("password")) {
+      this.password = await bcrypt.hash(this.password, 12);
+    }
     next();
   } catch (err) {
     console.error(err);
