@@ -5,7 +5,8 @@ export interface IQuestion extends Document {
   image?: string; // this will be probably be changed later
   choices?: Array<string>;
   text?: string;
-  topic: string;
+  time: number;
+  test: typeof Schema.Types.ObjectId;
 }
 
 const QuestionSchema: Schema = new Schema({
@@ -19,9 +20,15 @@ const QuestionSchema: Schema = new Schema({
   text: {
     type: String
   },
-  topic: {
-    type: String,
-    default: "Not specified"
+  time: {
+    type: Number,
+    enum: [10, 15, 30, 60, 120, 240, 300, 600],
+    default: 60
+  },
+  test: {
+    type: Schema.Types.ObjectId,
+    ref: "Test",
+    required: true
   }
 });
 

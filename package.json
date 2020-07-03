@@ -29,6 +29,9 @@
     "@types/morgan": "^1.9.1",
     "@types/node": "^14.0.13",
     "@types/passport": "^1.0.3",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/mongoose": "^5.7.29",
+    "@types/passport-jwt": "^3.0.3",
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "ts-node-dev": "^1.0.0-pre.49",
@@ -36,8 +39,6 @@
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
-    "@types/bcryptjs": "^2.4.2",
-    "@types/mongoose": "^5.7.29",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",

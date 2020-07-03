@@ -8,6 +8,7 @@ export interface ITeacher extends Document {
   password: string;
   department: string;
   classes?: Array<typeof Schema.Types.ObjectId>;
+  tests?: Array<typeof Schema.Types.ObjectId>;
 }
 
 const TeacherSchema: Schema = new Schema({
@@ -27,11 +28,8 @@ const TeacherSchema: Schema = new Schema({
     type: String,
     required: true
   },
-  department: {
-    type: String,
-    required: true
-  },
-  classes: [{ type: Schema.Types.ObjectId, ref: "Class" }]
+  classes: [{ type: Schema.Types.ObjectId, ref: "Class" }],
+  tests: [{ type: Schema.Types.ObjectId, ref: "Test" }]
 });
 
 // Handling passwords
