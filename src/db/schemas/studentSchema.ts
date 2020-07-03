@@ -3,7 +3,7 @@ import IUser from "./../interfaces/user";
 import bcrypt from "bcryptjs";
 
 export interface IStudent extends IUser {
-  classes?: Array<typeof Schema.Types.ObjectId>;
+  classes: Array<typeof Schema.Types.ObjectId>;
 }
 
 const StudentSchema: Schema = new Schema({
