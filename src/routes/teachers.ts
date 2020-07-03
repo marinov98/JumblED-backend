@@ -1,4 +1,6 @@
 import express from "express";
+import passport from "passport";
+import IUser from "./../db/interfaces/user";
 import { Teacher, Class, Test, Question, Student } from "./../db/models";
 
 const router = express.Router();
@@ -6,18 +8,21 @@ const router = express.Router();
  *  Get tests endpoint
  *  @route GET api/teachers/classes/:email
  *  @desc grab the classes that the specified teacher teaches
- *  @access Public
+ *  @access Protected
  */
 router.get(
-  "/classes/:email",
+  "/classes",
+  passport.authenticate("jwt", { session: false }),
   async (
     req: express.Request,
     res: express.Response,
     next: express.NextFunction
   ) => {
     try {
+      const user = req.user as IUser;
+      // check to ensure user is a teacher
       const teacher = await Teacher.findOne({
-        email: req.params.email
+        email: user.email
       }).populate("classes");
 
       if (!teacher) return res.status(404).json({ error: "teacher not found" });
@@ -31,20 +36,22 @@ router.get(
 
 /**
  *  Get tests endpoint
- *  @route GET api/teachers/tests/:email
+ *  @route GET api/teachers/tests
  *  @desc grab the quetions from a test
- *  @access Public
+ *  @access Protected
  */
 router.get(
-  "/tests/:email",
+  "/tests/",
+  passport.authenticate("jwt", { session: false }),
   async (
     req: express.Request,
     res: express.Response,
     next: express.NextFunction
   ) => {
     try {
+      const user = req.user as IUser;
       const teacher = await Teacher.findOne({
-        email: req.params.email
+        email: user.email
       }).populate("tests");
 
       if (!teacher) return res.status(404).json({ error: "teacher not found" });
@@ -57,13 +64,75 @@ router.get(
 );
 
 /**
+ *  Get students from specific class
+ *  @route GET api/teachers/tests
+ *  @desc grab the quetions from a test
+ *  @access Protected
+ */
+router.get(
+  "/classes/:classId",
+  passport.authenticate("jwt", { session: false }),
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const classToGet = await Class.findById(req.params.classId).populate(
+        "students"
+      );
+
+      if (!classToGet)
+        return res.status(404).json({ error: "Class not found" });
+
+      return res.status(200).json(classToGet.students);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
+ *  Get all students
+ *  @route GET api/teachers/classes/all
+ *  @desc grab all the students that a teacher teaches
+ *  @access Protected
+ */
+router.get(
+  "/classes/all",
+  passport.authenticate("jwt", { session: false }),
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const user = req.user as IUser;
+      const classes: Array<any> = await Class.find({
+        teacher: user._id
+      }).populate("students");
+
+      const students: Array<any> = [];
+      for (let i: number = 0; i < classes.length; i++) {
+        students.push(classes[i].students);
+      }
+
+      return res.status(200).json({ students });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
  *  Get test questions endpoint
  *  @route GET api/teachers/tests/questions/:testId
  *  @desc grab the quetions from a test
- *  @access Public
+ *  @access Protected
  */
 router.get(
   "/tests/questions/:testId",
+  passport.authenticate("jwt", { session: false }),
   async (
     req: express.Request,
     res: express.Response,
@@ -88,21 +157,23 @@ router.get(
  *  @access Public
  */
 router.post(
-  "/classes/:email",
+  "/classes",
+  passport.authenticate("jwt", { session: false }),
   async (
     req: express.Request,
     res: express.Response,
     next: express.NextFunction
   ) => {
     try {
-      const newClass = await Class.create(req.body);
-      await newClass.save();
-
+      const user = req.user as IUser;
       const teacher = await Teacher.findOne({
-        email: req.params.email
+        email: user.email
       });
 
       if (!teacher) return res.status(404).json({ error: "teacher not found" });
+
+      const newClass = await Class.create(req.body);
+      await newClass.save();
 
       teacher.classes.push(newClass._id);
       await teacher.save();
@@ -116,12 +187,13 @@ router.post(
 
 /**
  *  Add student to a class
- *  @route PATCH api/teachers/classes/student/:classId
+ *  @route PATCH api/teachers/classes/:studentEmail/:classId
  *  @desc grab the questions from a test
  *  @access Public
  */
 router.patch(
   "/classes/:studentEmail/:classId",
+  passport.authenticate("jwt", { session: false }),
   async (
     req: express.Request,
     res: express.Response,
@@ -153,11 +225,12 @@ router.patch(
 /**
  *  Add a question to a test
  *  @route PATCH api/teachers/tests/questions
- *  @desc
- *  @access Public
+ *  @desc update a test with a new question
+ *  @access Protected
  */
 router.patch(
   "/tests/questions/:testId",
+  passport.authenticate("jwt", { session: false }),
   async (
     req: express.Request,
     res: express.Response,

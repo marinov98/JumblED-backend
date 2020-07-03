@@ -38,7 +38,9 @@ router.post(
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        tests: [],
+        classes: []
       };
 
       await Teacher.create(userToBeCreated);
@@ -82,7 +84,8 @@ router.post(
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        classes: []
       };
 
       await Student.create(userToBeCreated);
