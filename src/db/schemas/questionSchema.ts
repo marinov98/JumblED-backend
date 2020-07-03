@@ -1,13 +1,5 @@
-import { Schema, Document, model } from "mongoose";
-
-export interface IQuestion extends Document {
-  prompt?: string;
-  image?: string; // this will be probably be changed later
-  choices?: Array<string>;
-  text?: string;
-  time: number;
-  test: typeof Schema.Types.ObjectId;
-}
+import { Schema, model } from "mongoose";
+import IQuestion from "./../interfaces/question";
 
 const QuestionSchema: Schema = new Schema({
   prompt: {

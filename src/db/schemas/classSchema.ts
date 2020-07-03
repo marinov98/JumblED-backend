@@ -1,10 +1,5 @@
-import { Schema, Document, model } from "mongoose";
-
-export interface IClass extends Document {
-  title: string;
-  students?: Array<typeof Schema.Types.ObjectId>;
-  teacher: typeof Schema.Types.ObjectId;
-}
+import { Schema, model } from "mongoose";
+import IClass from "./../interfaces/class";
 
 const ClassSchema: Schema = new Schema({
   title: {

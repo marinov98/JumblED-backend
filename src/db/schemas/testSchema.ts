@@ -1,10 +1,5 @@
-import { Schema, Document, model } from "mongoose";
-
-export interface ITest extends Document {
-  activation: Date;
-  questions: Array<typeof Schema.Types.ObjectId>;
-  label: string;
-}
+import { Schema, model } from "mongoose";
+import ITest from "./../interfaces/test";
 
 const TestSchema: Schema = new Schema({
   activation: {

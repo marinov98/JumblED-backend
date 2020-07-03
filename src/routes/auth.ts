@@ -112,9 +112,7 @@ router.post(
 
       if (!teacher) return res.status(404).json({ error: "Invalid email!" });
 
-      const isMatch = await teacher.schema.methods.comparePassword(
-        req.body.password
-      );
+      const isMatch = await teacher.comparePassword(req.body.password);
 
       if (!isMatch)
         return res
@@ -163,9 +161,7 @@ router.post(
 
       if (!student) return res.status(404).json({ error: "Invalid email!" });
 
-      const isMatch = await student.schema.methods.comparePassword(
-        req.body.password
-      );
+      const isMatch = await student.comparePassword(req.body.password);
 
       if (!isMatch)
         return res
