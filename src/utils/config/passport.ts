@@ -12,7 +12,7 @@ const options = {
 passport.use(
   new Strategy(
     options,
-    async (payload, done): Promise<void> => {
+    async (payload: any, done: Function): Promise<void> => {
       try {
         const teacher = await Teacher.findOne({ email: payload.email });
 
@@ -40,7 +40,12 @@ const googleOptions = {
 passport.use(
   new OAuth2Strategy(
     googleOptions,
-    async (accessToken, refreshToken, profile, done) => {
+    async (
+      accessToken: any,
+      refreshToken: any,
+      profile: any,
+      done: Function
+    ): Promise<any> => {
       try {
         const teacher = await Teacher.findOne({ googleId: profile.id });
 
