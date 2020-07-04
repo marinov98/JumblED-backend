@@ -60,12 +60,12 @@ router.patch(
 
 /**
  *  Register for a class
- *  @route PATCH api/students/classes
- *  @desc grab the test with questions
+ *  @route PATCH api/students/classes/:classId
+ *  @desc add student to a class
  *  @access Protected
  */
 router.patch(
-  "/classes/:classid",
+  "/classes/:classId",
   passport.authenticate("jwt", { session: false }),
   async (
     req: express.Request,
@@ -73,7 +73,7 @@ router.patch(
     next: express.NextFunction
   ) => {
     try {
-      const classToUpdate = await Class.findById(req.params.classid);
+      const classToUpdate = await Class.findById(req.params.classId);
       if (!classToUpdate)
         return res.status(404).json({ error: "Class not found" });
 

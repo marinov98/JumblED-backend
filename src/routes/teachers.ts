@@ -5,8 +5,8 @@ import { Teacher, Class, Test, Question, Student } from "./../db/models";
 
 const router = express.Router();
 /**
- *  Get tests endpoint
- *  @route GET api/teachers/classes/:email
+ *  Get classes endpoint
+ *  @route GET api/teachers/classes
  *  @desc grab the classes that the specified teacher teaches
  *  @access Protected
  */
