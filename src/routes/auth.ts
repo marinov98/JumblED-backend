@@ -213,9 +213,12 @@ router.post(
       // if user in db...
       // send back success and token
       if (user)
-        return res
-          .status(200)
-          .json({ authenticated: true, teacher: true, token: req.body.token });
+        return res.status(200).json({
+          success: true,
+          authenticated: true,
+          teacher: true,
+          token: req.body.token
+        });
 
       // create user and send to save in database
       const userToBeCreated = {
@@ -228,9 +231,12 @@ router.post(
         googleId: req.body.id
       };
       await Teacher.create(userToBeCreated);
-      return res
-        .status(201)
-        .json({ authenticated: true, teacher: true, token: req.body.token });
+      return res.status(201).json({
+        success: true,
+        authenticated: true,
+        teacher: true,
+        token: req.body.token
+      });
     } catch (err) {
       next(err);
     }
@@ -256,9 +262,12 @@ router.post(
       // if user in db...
       // send back success and token
       if (user)
-        return res
-          .status(200)
-          .json({ authenticated: true, teacher: false, token: req.body.token });
+        return res.status(200).json({
+          sucess: true,
+          authenticated: true,
+          teacher: false,
+          token: req.body.token
+        });
 
       // create user and send to save in database
       const userToBeCreated = {
@@ -272,9 +281,12 @@ router.post(
       };
 
       await Student.create(userToBeCreated);
-      return res
-        .status(201)
-        .json({ authenticated: true, teacher: false, token: req.body.token });
+      return res.status(201).json({
+        success: true,
+        authenticated: true,
+        teacher: false,
+        token: req.body.token
+      });
     } catch (err) {
       next(err);
     }
