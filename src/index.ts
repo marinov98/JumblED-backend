@@ -8,13 +8,12 @@ import connectToDatabase from "./utils/config/database";
 import { auth, teachers, students } from "./routes/index";
 
 (async () => {
-  // Initialize express
   try {
+    // Initialize express
     const app = express();
     app.set("port", port);
 
-    // middleware
-
+    // Middleware
     app.use(bodyparser.urlencoded({ extended: false }));
     app.use(bodyparser.json());
     app.use(passport.initialize());
@@ -39,18 +38,15 @@ import { auth, teachers, students } from "./routes/index";
     await connectToDatabase();
 
     // Routes
-    app.use("/api/auth", auth);
-    app.use("/api/teachers", teachers);
-    app.use("/api/students", students);
-
-    // single home route
     app.get("/", (req: express.Request, res: express.Response) => {
       return res.send("JumplED server up and running");
     });
 
-    // other routes go here
+    app.use("/api/auth", auth);
+    app.use("/api/teachers", teachers);
+    app.use("/api/students", students);
 
-    // launch server
+    // Launch Server
     app.listen(port, () => {
       console.log(`📡 Server up! 📡 Listening on  http://localhost:${port}`);
     });
