@@ -126,11 +126,11 @@ router.get(
 
 /**
  *  Get test questions endpoint
- *  @route GET api/teachers/tests/questions/:testId
- *  @desc grab the quetions from a test
+ *  @route PATCH api/teachers/tests/questions/:testId
+ *  @desc grab the test with questions and update code
  *  @access Protected
  */
-router.get(
+router.patch(
   "/tests/questions/:testId",
   passport.authenticate("jwt", { session: false }),
   async (
@@ -143,7 +143,15 @@ router.get(
 
       if (!test) return res.status(404).json({ error: "test not found" });
 
-      return res.status(200).json(test.questions);
+      test.code =
+        Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15);
+
+      test.activation = Date.now();
+
+      await test.save();
+
+      return res.status(200).json(test);
     } catch (err) {
       next(err);
     }

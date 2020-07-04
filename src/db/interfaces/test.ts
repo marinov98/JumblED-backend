@@ -1,7 +1,8 @@
 import { Schema, Document } from "mongoose";
 
 export default interface ITest extends Document {
-  activation: Date;
+  activation: number;
   questions: Array<typeof Schema.Types.ObjectId>;
   label: string;
+  code: string;
 }

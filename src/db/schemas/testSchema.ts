@@ -3,7 +3,7 @@ import ITest from "./../interfaces/test";
 
 const TestSchema: Schema = new Schema({
   activation: {
-    type: Date,
+    type: Number,
     required: true,
     default: Date.now()
   },
