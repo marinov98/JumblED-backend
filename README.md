@@ -4,7 +4,7 @@ The backend for JumblED - test randomizer application
 
 ## Hosting
 
-- url: https://jumpled-backend.herokuapp.com/
+- URL: https://jumpled-backend.herokuapp.com/
 
 ## Developing Locally
 
