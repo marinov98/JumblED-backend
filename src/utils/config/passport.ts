@@ -1,15 +1,16 @@
-import JWT from "passport-jwt";
-import { Teacher, Student } from "../../db/models";
 import passport from "passport";
+import { ExtractJwt, Strategy } from "passport-jwt";
+import { OAuth2Strategy } from "passport-google-oauth";
+import { Teacher, Student } from "../../db/models";
 import { jwtSecret, googleSecret } from "./keys";
 
 const options = {
-  jwtFromRequest: JWT.ExtractJwt.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: jwtSecret
 };
 
 passport.use(
-  new JWT.Strategy(
+  new Strategy(
     options,
     async (payload, done): Promise<void> => {
       try {
@@ -22,6 +23,34 @@ passport.use(
 
           if (!student) done(null, false);
           else done(null, student);
+        }
+      } catch (err) {
+        done(err);
+      }
+    }
+  )
+);
+
+const googleOptions = {
+  clientID: "CLIENT ID",
+  clientSecret: googleSecret,
+  callbackURL: "http://www.example.com/auth/google/callback"
+};
+
+passport.use(
+  new OAuth2Strategy(
+    googleOptions,
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const teacher = await Teacher.findOne({ googleId: profile.id });
+
+        if (teacher) {
+          return done(null, teacher);
+        } else {
+          const student = await Student.findOne({ googleId: profile.id });
+
+          if (!student) return done(null, false);
+          else return done(null, student);
         }
       } catch (err) {
         done(err);

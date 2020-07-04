@@ -11,5 +11,6 @@ const dbUrl: string =
   process.env.DB_URL || "mongodb://localhost:27017/jumbledTest";
 const jwtSecret: string = process.env.SECRET || "VERYSUPERSECRETLYSECRET";
 const googleSecret: string = process.env.GOOGLE_SECRET || "googleSecret";
+const googleClientId: string = process.env.GOOGLE_CLIENT_ID || "googleClientId";
 
-export { port, dbUrl, jwtSecret, googleSecret };
+export { port, dbUrl, jwtSecret, googleSecret, googleClientId };

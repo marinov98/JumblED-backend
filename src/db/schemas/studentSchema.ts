@@ -23,7 +23,11 @@ const StudentSchema: Schema = new Schema({
     type: String,
     required: true
   },
-  classes: [{ type: Schema.Types.ObjectId, ref: "Class" }]
+  classes: [{ type: Schema.Types.ObjectId, ref: "Class" }],
+  googleId: {
+    type: String,
+    default: "None"
+  }
 });
 
 // Handling passwords

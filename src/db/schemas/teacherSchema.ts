@@ -25,7 +25,11 @@ const TeacherSchema: Schema = new Schema({
     required: true
   },
   classes: [{ type: Schema.Types.ObjectId, ref: "Class" }],
-  tests: [{ type: Schema.Types.ObjectId, ref: "Test" }]
+  tests: [{ type: Schema.Types.ObjectId, ref: "Test" }],
+  googleId: {
+    type: String,
+    default: "None"
+  }
 });
 
 // Handling passwords
