@@ -2,7 +2,7 @@ import passport from "passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { OAuth2Strategy } from "passport-google-oauth";
 import { Teacher, Student } from "../../db/models";
-import { jwtSecret, googleSecret } from "./keys";
+import { jwtSecret, googleSecret, googleClientId } from "./keys";
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -32,7 +32,7 @@ passport.use(
 );
 
 const googleOptions = {
-  clientID: "CLIENT ID",
+  clientID: googleClientId,
   clientSecret: googleSecret,
   callbackURL: "http://www.example.com/auth/google/callback"
 };
