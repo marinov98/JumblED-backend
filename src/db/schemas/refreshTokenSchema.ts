@@ -22,6 +22,11 @@ const RefreshTokenSchema: Schema = new Schema({
   replacedByToken: {
     type: String,
     required: true
+  },
+  onModel: {
+    type: String,
+    required: true,
+    enum: ["Teacher", "Student"]
   }
 });
 

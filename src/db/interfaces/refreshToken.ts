@@ -5,7 +5,7 @@ export default interface IRefreshToken extends Document {
   token: string;
   created: number;
   expires: number;
-  replacedByToken: string;
+  replacedByToken?: string;
   onModel: string;
   isExpired: () => boolean;
   isActive: () => boolean;

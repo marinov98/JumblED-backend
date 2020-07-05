@@ -1,7 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { jwtSecret } from "./../utils/config/keys";
-import { Teacher, Student } from "./../db/models";
+import { Teacher, Student, RefreshToken } from "./../db/models";
 import registrationSchema from "./../utils/validation/schemas";
 
 const router = express.Router();
@@ -115,7 +116,7 @@ router.post(
 
       if (!teacher) return res.status(404).json({ error: "Invalid email!" });
 
-      const isMatch = await teacher.comparePassword(req.body.password);
+      const isMatch: boolean = await teacher.comparePassword(req.body.password);
 
       if (!isMatch)
         return res
@@ -131,14 +132,26 @@ router.post(
         tests: teacher.tests
       };
 
-      const accessToken = jwt.sign(payload, jwtSecret, {
+      const accessToken: string = jwt.sign(payload, jwtSecret, {
         expiresIn: "300m"
       });
+
+      // refresh token logic:
+      const newRefreshToken = {
+        owner: teacher._id,
+        token: crypto.randomBytes(40).toString("hex"),
+        created: Date.now(),
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // expires in 7 days
+        onModel: "Teacher"
+      };
+
+      await RefreshToken.create(newRefreshToken);
 
       return res.status(200).json({
         authenticated: true,
         teacher: true,
-        token: accessToken
+        token: accessToken,
+        refreshToken: newRefreshToken.token
       });
     } catch (err) {
       next(err);
@@ -164,7 +177,7 @@ router.post(
 
       if (!student) return res.status(404).json({ error: "Invalid email!" });
 
-      const isMatch = await student.comparePassword(req.body.password);
+      const isMatch: boolean = await student.comparePassword(req.body.password);
 
       if (!isMatch)
         return res
@@ -183,109 +196,22 @@ router.post(
         expiresIn: "300m"
       });
 
+      // refresh token logic:
+      const newRefreshToken = {
+        owner: student._id,
+        token: crypto.randomBytes(40).toString("hex"),
+        created: Date.now(),
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // expires in 7 days
+        onModel: "Student"
+      };
+
+      await RefreshToken.create(newRefreshToken);
+
       return res.status(200).json({
         authenticated: true,
         teacher: false,
-        token: accessToken
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
-);
-
-/**
- *  Google login endpoint
- *  @route POST api/auth/googlelogin/teachers
- *  @desc Login user if they exist, if not, create new user and login
- *  @access Public
- */
-router.post(
-  "/googlelogin/teachers",
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    // Check whether user in db based on email
-    try {
-      const user = await Teacher.findOne({ email: req.body.email });
-      // if user in db...
-      // send back success and token
-      if (user)
-        return res.status(200).json({
-          success: true,
-          authenticated: true,
-          teacher: true,
-          token: req.body.token
-        });
-
-      // create user and send to save in database
-      const userToBeCreated = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        password: req.body.password,
-        email: req.body.email,
-        tests: [],
-        classes: [],
-        googleId: req.body.id
-      };
-      await Teacher.create(userToBeCreated);
-      return res.status(201).json({
-        success: true,
-        authenticated: true,
-        teacher: true,
-        token: req.body.token
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
-);
-
-/**
- *  Google login endpoint
- *  @route POST api/auth/googlelogin/Students
- *  @desc Login user if they exist, if not, create new user and login
- *  @access Public
- */
-router.post(
-  "/googlelogin/students",
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    // Check whether user in db based on email
-    try {
-      const user = await Student.findOne({ email: req.body.email });
-      // if user in db...
-      // send back success and token
-      if (user)
-        return res.status(200).json({
-          sucess: true,
-          authenticated: true,
-          teacher: false,
-          token: req.body.token
-        });
-
-      // create user and send to save in database
-      const userToBeCreated = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        password: req.body.password,
-        email: req.body.email,
-        tests: [],
-        classes: [],
-        googleId: req.body.id
-      };
-
-      await Student.create(userToBeCreated);
-      return res.status(201).json({
-        success: true,
-        authenticated: true,
-        teacher: false,
-        token: req.body.token
+        token: accessToken,
+        refreshToken: newRefreshToken.token
       });
     } catch (err) {
       next(err);
