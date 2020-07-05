@@ -90,7 +90,7 @@ router.post(
 
       if (!refreshToken || refreshToken.isExpired()) return res.sendStatus(401);
 
-      // owner is now Teacher object but typescript does not catch it
+      // owner is now Student object but typescript does not catch it
       const user: any = refreshToken.owner;
 
       // create refresh token
