@@ -2,7 +2,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { jwtSecret } from "./../utils/config/keys";
-import { Teacher, Student, RefreshToken } from "./../db/models";
+import { Teacher, Student, Class, RefreshToken } from "./../db/models";
 import registrationSchema from "./../utils/validation/schemas";
 
 const router = express.Router();
@@ -213,6 +213,57 @@ router.post(
         token: accessToken,
         refreshToken: newRefreshToken.token
       });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
+ *  Delete account endpoint
+ *  @route DELETE api/auth/delete/teachers
+ *  @desc delete a teacher's account
+ *  @access Public
+ */
+router.delete(
+  "/delete/teachers/",
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      await Teacher.findByIdAndDelete(req.body.id);
+      await Class.findOneAndDelete({ teacher: req.body.id });
+
+      return res
+        .status(201)
+        .json({ message: "Teacher account successfully deleted" });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
+ *  Delete account endpoint
+ *  @route DELETE api/auth/delete/teachers
+ *  @desc delete a teacher's account
+ *  @access Public
+ */
+router.delete(
+  "/delete/teachers/",
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      await Student.findByIdAndDelete(req.body.id);
+
+      return res
+        .status(201)
+        .json({ message: "Student account successfully deleted" });
     } catch (err) {
       next(err);
     }
