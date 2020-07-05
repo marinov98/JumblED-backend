@@ -13,6 +13,7 @@
     "clean": "rimraf dist",
     "dev": "nodemon --exec ts-node src/index.ts",
     "ts:dev": "ts-node-dev --respawn src/index.ts",
+    "ts:start": "ts-node src/index.ts",
     "prod:serve": "npm run build && npm run start",
     "start": "node dist/index.js"
   },
@@ -40,6 +41,7 @@
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "ts-node-dev": "^1.0.0-pre.49",
+    "ts-node": "^8.10.2",
     "typescript": "^3.9.5"
   },
   "dependencies": {
@@ -55,7 +57,6 @@
     "passport": "^0.4.1",
     "passport-google-oauth": "^2.0.0",
     "passport-jwt": "^4.0.0",
-    "rimraf": "^3.0.2",
-    "ts-node": "^8.10.2"
+    "rimraf": "^3.0.2"
   }
 }
