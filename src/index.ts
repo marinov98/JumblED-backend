@@ -5,7 +5,7 @@ import passport from "passport";
 import { port } from "./utils/config/keys";
 import "./utils/config/passport";
 import connectToDatabase from "./utils/config/database";
-import { auth, teachers, students } from "./routes/index";
+import { auth, teachers, students, tokens, google } from "./routes/index";
 
 (async () => {
   try {
@@ -43,6 +43,8 @@ import { auth, teachers, students } from "./routes/index";
     });
 
     app.use("/api/auth", auth);
+    app.use("/api/token", tokens);
+    app.use("/api/googlelogin", google);
     app.use("/api/teachers", teachers);
     app.use("/api/students", students);
 
