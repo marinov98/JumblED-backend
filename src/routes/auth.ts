@@ -234,7 +234,7 @@ router.post(
  *  @access Public
  */
 router.delete(
-  "/delete/teachers/",
+  "/delete/teachers",
   async (
     req: express.Request,
     res: express.Response,
@@ -256,12 +256,12 @@ router.delete(
 
 /**
  *  Delete account endpoint
- *  @route DELETE api/auth/delete/teachers
- *  @desc delete a teacher's account
+ *  @route DELETE api/auth/delete/students
+ *  @desc delete a student's account
  *  @access Public
  */
 router.delete(
-  "/delete/teachers/",
+  "/delete/students",
   async (
     req: express.Request,
     res: express.Response,
