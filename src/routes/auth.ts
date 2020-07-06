@@ -242,7 +242,8 @@ router.delete(
   ) => {
     try {
       await Teacher.findByIdAndDelete(req.body.id);
-      await Class.findOneAndDelete({ teacher: req.body.id });
+      // delete every class the teacher has made
+      await Class.deleteMany({ teacher: req.body.id });
 
       return res
         .status(201)
@@ -267,7 +268,21 @@ router.delete(
     next: express.NextFunction
   ) => {
     try {
-      await Student.findByIdAndDelete(req.body.id);
+      const studentToDelete = await Student.findById(req.body.id);
+
+      if (studentToDelete) {
+        // delete student from every class they are registered for
+        for (let i: number = 0; i < studentToDelete?.classes.length; i++) {
+          let currClass = await Class.findById(studentToDelete.classes[i]);
+
+          if (currClass) {
+            currClass.students.filter(
+              studentId => studentId.toString() !== req.body.id.toString()
+            );
+            await currClass.save();
+          }
+        }
+      }
 
       return res
         .status(201)

@@ -161,7 +161,7 @@ router.patch(
 /**
  *  Create a class endpoint
  *  @route POST api/teachers/classes/
- *  @desc grab the quetions from a test
+ *  @desc create a class and assign it to a teacher
  *  @access Public
  */
 router.post(
@@ -194,9 +194,9 @@ router.post(
 );
 
 /**
- *  Add student to a class
+ *  Add student to a class endpoint
  *  @route PATCH api/teachers/classes/:studentEmail/:classId
- *  @desc grab the questions from a test
+ *  @desc update a classes' student
  *  @access Public
  */
 router.patch(
@@ -232,7 +232,7 @@ router.patch(
 
 /**
  *  Add a question to a test
- *  @route PATCH api/teachers/tests/questions
+ *  @route PATCH api/teachers/tests/questions/:testId
  *  @desc update a test with a new question
  *  @access Protected
  */
@@ -253,6 +253,40 @@ router.patch(
       const questionToBeAdded = await Question.create(req.body);
 
       testToUpdate.questions.push(questionToBeAdded._id);
+      await testToUpdate.save();
+
+      return res.status(200).json(testToUpdate);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+/**
+ *  Remove a question to a test
+ *  @route DELETE api/teachers/tests/:questionId/:testId
+ *  @desc delete a question and update the database
+ *  @access Protected
+ */
+router.delete(
+  "/tests/:questionId/:testId",
+  passport.authenticate("jwt", { session: false }),
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const testToUpdate = await Test.findById(req.params.testId);
+
+      if (!testToUpdate)
+        return res.status(404).json({ error: "Test not found" });
+
+      await Question.findByIdAndDelete(req.params.questionId);
+
+      testToUpdate.questions.filter(
+        questionId => questionId.toString() !== req.params.questionId
+      );
       await testToUpdate.save();
 
       return res.status(200).json(testToUpdate);
