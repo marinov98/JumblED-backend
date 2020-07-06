@@ -28,11 +28,15 @@ router.post(
         return res.status(404).json({ error: error.details[0].message });
 
       // check if a user exists with the same email
-      const userWithSameEmail = await Teacher.findOne({
+      const teacherWithSameEmail = await Teacher.findOne({
         email: req.body.email
       });
 
-      if (userWithSameEmail)
+      const studentWithSameEmail = await Student.findOne({
+        email: req.body.email
+      });
+
+      if (teacherWithSameEmail || studentWithSameEmail)
         return res.status(409).json({ error: "Email already exists!" });
 
       const userToBeCreated = {
@@ -74,11 +78,15 @@ router.post(
         return res.status(404).json({ error: error.details[0].message });
 
       // check if a user exists with the same email
-      const userWithSameEmail = await Student.findOne({
+      const studentWithSameEmail = await Student.findOne({
         email: req.body.email
       });
 
-      if (userWithSameEmail)
+      const teacherWithSameEmail = await Teacher.findOne({
+        email: req.body.email
+      });
+
+      if (studentWithSameEmail || teacherWithSameEmail)
         return res.status(409).json({ error: "Email already exists!" });
 
       const userToBeCreated = {
