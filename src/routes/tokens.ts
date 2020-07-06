@@ -135,7 +135,7 @@ router.post(
 
 /**
  * Reject token endpoint
- * @route DELETE api/token/reject/:userId
+ * @route DELETE api/token/reject
  * @desc delete all the refresh tokens of the user
  * @access Public
  */
