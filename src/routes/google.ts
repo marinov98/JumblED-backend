@@ -1,5 +1,8 @@
 import express from "express";
-import { Teacher, Student } from "./../db/models";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
+import { Teacher, Student, RefreshToken } from "./../db/models";
+import { jwtSecret } from "./../utils/config/keys";
 
 const router = express.Router();
 
@@ -18,33 +21,53 @@ router.post(
   ) => {
     // Check whether user in db based on email
     try {
-      const user = await Teacher.findOne({ email: req.body.email });
-      // if user in db...
-      // send back success and token
-      if (user)
-        return res.status(200).json({
-          success: true,
-          authenticated: true,
-          teacher: true,
-          token: req.body.token
-        });
+      let user = await Teacher.findOne({ email: req.body.email });
+      // if user not in db...
+      // create the user
+      if (!user) {
+        const userToBeCreated = {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          password: req.body.password,
+          email: req.body.email,
+          tests: [],
+          classes: [],
+          googleId: req.body.id
+        };
+        user = await Teacher.create(userToBeCreated);
+      }
+
+      // create jwt and refresh token
+      const payload = {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        tests: user.tests,
+        classes: user.classes
+      };
+
+      const accessToken: string = jwt.sign(payload, jwtSecret, {
+        expiresIn: "300m"
+      });
+
+      const newRefreshToken = {
+        owner: user._id,
+        token: crypto.randomBytes(40).toString("hex"),
+        created: Date.now(),
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        onModel: "Teacher"
+      };
+
+      await RefreshToken.create(newRefreshToken);
 
       // create user and send to save in database
-      const userToBeCreated = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        password: req.body.password,
-        email: req.body.email,
-        tests: [],
-        classes: [],
-        googleId: req.body.id
-      };
-      await Teacher.create(userToBeCreated);
       return res.status(201).json({
         success: true,
         authenticated: true,
         teacher: true,
-        token: req.body.token
+        token: accessToken,
+        refreshToken: newRefreshToken.token
       });
     } catch (err) {
       next(err);
@@ -67,34 +90,53 @@ router.post(
   ) => {
     // Check whether user in db based on email
     try {
-      const user = await Student.findOne({ email: req.body.email });
+      let user = await Student.findOne({ email: req.body.email });
       // if user in db...
       // send back success and token
-      if (user)
-        return res.status(200).json({
-          sucess: true,
-          authenticated: true,
-          teacher: false,
-          token: req.body.token
-        });
+      if (!user) {
+        // create user and send to save in database
+        const userToBeCreated = {
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          password: req.body.password,
+          email: req.body.email,
+          tests: [],
+          classes: [],
+          googleId: req.body.id
+        };
 
-      // create user and send to save in database
-      const userToBeCreated = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        password: req.body.password,
-        email: req.body.email,
-        tests: [],
-        classes: [],
-        googleId: req.body.id
+        user = await Student.create(userToBeCreated);
+      }
+
+      // create jwt and refresh token
+      const payload = {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        classes: user.classes
       };
 
-      await Student.create(userToBeCreated);
+      const accessToken: string = jwt.sign(payload, jwtSecret, {
+        expiresIn: "300m"
+      });
+
+      const newRefreshToken = {
+        owner: user._id,
+        token: crypto.randomBytes(40).toString("hex"),
+        created: Date.now(),
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        onModel: "Student"
+      };
+
+      await RefreshToken.create(newRefreshToken);
+
       return res.status(201).json({
         success: true,
         authenticated: true,
         teacher: false,
-        token: req.body.token
+        token: accessToken,
+        refreshToken: newRefreshToken.token
       });
     } catch (err) {
       next(err);
