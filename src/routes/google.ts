@@ -3,6 +3,7 @@ import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { Teacher, Student, RefreshToken } from "./../db/models";
 import { jwtSecret } from "./../utils/config/keys";
+import generateTokens from "./../utils/auth/tokens";
 
 const router = express.Router();
 
@@ -38,28 +39,7 @@ router.post(
       }
 
       // create jwt and refresh token
-      const payload = {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        tests: user.tests,
-        classes: user.classes
-      };
-
-      const accessToken: string = jwt.sign(payload, jwtSecret, {
-        expiresIn: "300m"
-      });
-
-      const newRefreshToken = {
-        owner: user._id,
-        token: crypto.randomBytes(40).toString("hex"),
-        created: Date.now(),
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-        onModel: "Teacher"
-      };
-
-      await RefreshToken.create(newRefreshToken);
+      const { accessToken, refreshToken } = await generateTokens(user, true);
 
       // create user and send to save in database
       return res.status(201).json({
@@ -67,7 +47,7 @@ router.post(
         authenticated: true,
         teacher: true,
         token: accessToken,
-        refreshToken: newRefreshToken.token
+        refreshToken: refreshToken
       });
     } catch (err) {
       next(err);
@@ -108,34 +88,14 @@ router.post(
       }
 
       // create jwt and refresh token
-      const payload = {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        classes: user.classes
-      };
-
-      const accessToken: string = jwt.sign(payload, jwtSecret, {
-        expiresIn: "300m"
-      });
-
-      const newRefreshToken = {
-        owner: user._id,
-        token: crypto.randomBytes(40).toString("hex"),
-        created: Date.now(),
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-        onModel: "Student"
-      };
-
-      await RefreshToken.create(newRefreshToken);
+      const { accessToken, refreshToken } = await generateTokens(user, false);
 
       return res.status(201).json({
         success: true,
         authenticated: true,
         teacher: false,
         token: accessToken,
-        refreshToken: newRefreshToken.token
+        refreshToken: refreshToken
       });
     } catch (err) {
       next(err);

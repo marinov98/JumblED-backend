@@ -1,8 +1,6 @@
 import express from "express";
-import jwt from "jsonwebtoken";
-import crypto from "crypto";
-import { jwtSecret } from "./../utils/config/keys";
 import { RefreshToken } from "./../db/models";
+import generateTokens from "./../utils/auth/tokens";
 
 const router = express.Router();
 
@@ -29,40 +27,16 @@ router.post(
       // owner is now Teacher object but typescript does not catch it
       const user: any = refreshToken.owner;
 
-      // create refresh token
-      const newRefreshToken = {
-        owner: user._id,
-        token: crypto.randomBytes(40).toString("hex"),
-        created: Date.now(),
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // expires in 7 days
-        onModel: "Teacher"
-      };
-
-      await RefreshToken.create(newRefreshToken);
-
-      // update previous refresh token
-      refreshToken.replacedByToken = newRefreshToken.token;
+      // create jwt and refresh token
+      const tokens = await generateTokens(user, true);
+      refreshToken.replacedByToken = tokens.refreshToken;
       await refreshToken.save();
-
-      const payload = {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        tests: user.tests,
-        classes: user.classes
-      };
-
-      // refresh the main jwt token
-      const token = jwt.sign(payload, jwtSecret, {
-        expiresIn: "300m"
-      });
 
       return res.status(201).json({
         authenticated: true,
         teacher: true,
-        token: token,
-        refreshToken: newRefreshToken.token
+        token: tokens.accessToken,
+        refreshToken: tokens.refreshToken
       });
     } catch (err) {
       next(err);
@@ -93,39 +67,17 @@ router.post(
       // owner is now Student object but typescript does not catch it
       const user: any = refreshToken.owner;
 
-      // create refresh token
-      const newRefreshToken = {
-        owner: user._id,
-        token: crypto.randomBytes(40).toString("hex"),
-        created: Date.now(),
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // expires in 7 days
-        onModel: "Student"
-      };
+      // create jwt and refresh token
+      const tokens = await generateTokens(user, false);
 
-      await RefreshToken.create(newRefreshToken);
-
-      // update previous refresh token
-      refreshToken.replacedByToken = newRefreshToken.token;
+      refreshToken.replacedByToken = tokens.refreshToken;
       await refreshToken.save();
-
-      const payload = {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        classes: user.classes
-      };
-
-      // refresh the main jwt token
-      const token = jwt.sign(payload, jwtSecret, {
-        expiresIn: "300m"
-      });
 
       return res.status(201).json({
         authenticated: true,
         teacher: false,
-        token: token,
-        refreshToken: newRefreshToken.token
+        token: tokens.accessToken,
+        refreshToken: tokens.refreshToken
       });
     } catch (err) {
       next(err);
