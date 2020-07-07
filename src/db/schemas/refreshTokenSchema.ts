@@ -20,8 +20,7 @@ const RefreshTokenSchema: Schema = new Schema({
     required: true
   },
   replacedByToken: {
-    type: String,
-    required: true
+    type: String
   },
   onModel: {
     type: String,
