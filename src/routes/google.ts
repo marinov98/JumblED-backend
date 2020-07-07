@@ -91,8 +91,8 @@ router.post(
     // Check whether user in db based on email
     try {
       let user = await Student.findOne({ email: req.body.email });
-      // if user in db...
-      // send back success and token
+      // if user not in db...
+      // Create new user
       if (!user) {
         // create user and send to save in database
         const userToBeCreated = {
