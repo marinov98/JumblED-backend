@@ -100,7 +100,6 @@ router.post(
           lastName: req.body.lastName,
           password: req.body.password,
           email: req.body.email,
-          tests: [],
           classes: [],
           googleId: req.body.id
         };
