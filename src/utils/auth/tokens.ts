@@ -4,14 +4,19 @@ import IUser from "./../../db/interfaces/user";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 
-export default async function generateTokens(user: IUser, isTeacher: boolean) {
+type TokenObject = { accessToken: string; refreshToken: string };
+
+export default async function generateTokens(
+  user: IUser,
+  isTeacher: boolean
+): Promise<TokenObject> {
   const payload = {
     id: user._id,
     email: user.email
   };
 
   const accessToken: string = jwt.sign(payload, jwtSecret, {
-    expiresIn: "300m",
+    expiresIn: "15m",
     issuer: "JumblED",
     audience: "JumblED Users"
   });
