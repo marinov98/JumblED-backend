@@ -5,7 +5,9 @@ import { jwtSecret } from "./keys";
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: jwtSecret
+  secretOrKey: jwtSecret,
+  issuer: "JumblED",
+  audience: "JumblED Users"
 };
 
 passport.use(
