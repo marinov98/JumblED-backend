@@ -1,4 +1,4 @@
-import { jwtSecret } from "./../config/keys";
+import { jwtSecret, issuer, audience } from "./../config/keys";
 import { RefreshToken } from "./../../db/models";
 import IUser from "./../../db/interfaces/user";
 import crypto from "crypto";
@@ -17,8 +17,8 @@ export default async function generateTokens(
 
   const accessToken: string = jwt.sign(payload, jwtSecret, {
     expiresIn: "15m",
-    issuer: "JumblED",
-    audience: "JumblED Users"
+    issuer: issuer,
+    audience: audience
   });
 
   // refresh token logic:

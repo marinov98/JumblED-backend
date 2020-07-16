@@ -1,13 +1,13 @@
 import passport from "passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { Teacher, Student } from "../../db/models";
-import { jwtSecret } from "./keys";
+import { jwtSecret, issuer, audience } from "./keys";
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: jwtSecret,
-  issuer: "JumblED",
-  audience: "JumblED Users"
+  issuer: issuer,
+  audience: audience
 };
 
 passport.use(

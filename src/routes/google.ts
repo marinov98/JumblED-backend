@@ -1,8 +1,5 @@
 import express from "express";
-import crypto from "crypto";
-import jwt from "jsonwebtoken";
-import { Teacher, Student, RefreshToken } from "./../db/models";
-import { jwtSecret } from "./../utils/config/keys";
+import { Teacher, Student } from "./../db/models";
 import generateTokens from "./../utils/auth/tokens";
 
 const router = express.Router();
