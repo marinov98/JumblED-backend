@@ -9,7 +9,7 @@ import { auth, teachers, students, tokens, google } from "./routes/index";
 
 (async () => {
   try {
-    // Initialize Express
+    // Start Express
     const app = express();
     app.set("port", port);
 
